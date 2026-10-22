@@ -1,0 +1,40 @@
+{
+  "name": "keytomic",
+  "displayName": "AI SEO with Keytomic",
+  "version": "0.1.0",
+  "description": "The end-to-end AI SEO agent in Cursor, for Google and AI search: SEO audits, Search Console insights, keyword research, content calendar, articles and hero images. Find top, new, improving and declining rankings, low-hanging fruits, underperforming pages, keyword cannibalization, zombie pages and question queries; inspect URLs and submit sitemaps; plan and run your content calendar; write and edit articles; manage your brand profile, authors and settings; and check plan usage and integrations. AI SEO automation on your Keytomic workspace.",
+  "author": {
+    "name": "Keytomic",
+    "email": "hi@keytomic.com"
+  },
+  "publisher": "Keytomic",
+  "homepage": "https://keytomic.com/mcp",
+  "repository": "https://github.com/epicx-labs/keytomic-cursor-plugin",
+  "license": "MIT",
+  "logo": "assets/logo.png",
+  "keywords": [
+    "ai-seo-agent",
+    "ai-seo",
+    "seo-automation",
+    "seo",
+    "seo-audit",
+    "website-audit",
+    "google-search-console",
+    "search-console",
+    "keyword-research",
+    "content-calendar",
+    "ai-content-writing",
+    "keytomic",
+    "mcp"
+  ],
+  "category": "integrations",
+  "tags": [
+    "seo",
+    "ai-seo",
+    "mcp",
+    "google-search-console",
+    "keyword-research",
+    "content"
+  ],
+  "mcpServers": "./mcp.json"
+}
