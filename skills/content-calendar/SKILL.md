@@ -18,8 +18,8 @@ These tools need the content MCP Scopes. The tools that change data need both `c
    | --- | --- |
    | What is planned for a day, a week or a month | `list_calendar_topics` with `from` and `to` (UTC, both included) |
    | Every topic, with the unscheduled ones | `list_calendar_topics` without dates. Page with `startRow` and `nextStartRow` |
-   | One topic in full | `get_calendar_topic` |
-   | How many keyword searches are left | `get_keyword_search_usage` |
+   | One topic in full | `list_calendar_topics` with `topicId` |
+   | How many keyword searches are left | `get_project` with `sections` set to `["keywordSearches"]` |
    | Keyword ideas with volume, difficulty, competition, CPC and trend | `search_keywords` |
    | A change to a topic: day, title, review status, author, planning fields | `update_calendar_topic` |
    | Topics from the keywords of a search | `add_keywords_to_calendar` |
@@ -32,13 +32,13 @@ These tools need the content MCP Scopes. The tools that change data need both `c
    | A new hero image for an article | `generate_hero_image`, with `creativeDirection` and `exclusions` from the user's words |
 
 3. Before each paid tool, tell the user what the call uses and what is left, then get a yes:
-   - `search_keywords` and `create_calendar_topic` use 1 of the site's monthly keyword searches each. Read `get_keyword_search_usage` first.
+   - `search_keywords` and `create_calendar_topic` use 1 of the site's monthly keyword searches each. Read the `keywordSearches` section of `get_project` first.
    - `add_keywords_to_calendar` uses no keyword search. For `add_keywords_to_calendar` and `create_calendar_topic`, the site must have articles left this month, or Article Credits, for the new topics.
    - `generate_hero_image` uses 1 Blog Hero Credit. Keytomic also calls these credits image credits.
    - `start_content_calendar`, `generate_article` and `generate_hero_image`: call the tool without `confirm` first. It returns a plan and starts nothing. Show the plan to the user. Call again with `confirm` set to `true` only after the user agrees. For `generate_article`, add `useArticleCredit` set to `true` when the plan uses an Article Credit.
 4. For `search_keywords`, give the seed keyword and the related keywords with their numbers. Keywords with no search volume are for reference only. For `add_keywords_to_calendar`, send each keyword with its `searchVolume`, `difficulty` and `searchTrend` from `search_keywords`, unchanged.
 5. When `add_keywords_to_calendar` or `create_calendar_topic` returns collisions, nothing was added. Show the collisions to the user. Call again with `allowCannibalization` set to `true` only after the user agrees.
-6. After `start_content_calendar` starts a run, follow it with `get_content_calendar_progress` until it ends. After `generate_article` starts an article, follow the topic with `get_calendar_topic` (`generationStatus`), then read the article with `get_draft`.
+6. After `start_content_calendar` starts a run, follow it with `get_content_calendar_progress` until it ends. After `generate_article` starts an article, follow the topic with `list_calendar_topics` and its `topicId`, then read the article with `get_draft`.
    - When a `generate_hero_image` call with `confirm` times out, read the article with `get_draft` before you call again. The image can still finish, and a second call uses a second Blog Hero Credit.
    - When `generate_hero_image` returns `generated_not_attached`, the credit is used and the image is in the Image Studio Media Library. Tell the user to attach it in Content Studio.
 7. For `update_calendar_topic` and `update_draft`, show the user the exact fields and the new values, then get a yes. Send only the fields that change.
@@ -52,15 +52,15 @@ These tools need the content MCP Scopes. The tools that change data need both `c
 - List the topics by scheduled day. For each: the title, the primary keyword with its volume, the review status, and whether the article is written or published.
 - For a calendar run: the status, each stage with its summary, the number of topics it plans, and the message Keytomic shows when it stopped.
 - For an article: the title, the primary keyword, the scheduled day, the author, the SEO title and description, the word count, the publication status with the published URL, and the `contentStudioUrl` link to the article in Keytomic.
-- After an edit or an add: what changed, and what each paid call used. For what is left, read `get_keyword_search_usage` or `get_usage`. The plan of `start_content_calendar`, `generate_article` and `generate_hero_image` gives the counts before the call.
+- After an edit or an add: what changed, and what each paid call used. For what is left, read the `keywordSearches` or `usage` section of `get_project`. The plan of `start_content_calendar`, `generate_article` and `generate_hero_image` gives the counts before the call.
 
 ## Errors
 
 - `retryable` true: wait `retryAfterSeconds`, then call the tool again.
 - `topic_not_in_plan`: the topic is locked for now. Tell the user so.
-- `topic_has_article`: the topic has an article, or Keytomic writes its article now. The topic cannot change and no new article can start. Read `generationStatus` with `get_calendar_topic`. When the article is ready, offer `get_draft` and `update_draft`.
-- `topic_generation_in_progress`: Keytomic writes the article now. Follow it with `get_calendar_topic`.
-- `draft_not_found`: the topic has no article that is ready. Read `generationStatus` with `get_calendar_topic`. When Keytomic writes the article now, follow it. Otherwise, offer `generate_article`.
+- `topic_has_article`: the topic has an article, or Keytomic writes its article now. The topic cannot change and no new article can start. Read the topic with `list_calendar_topics` and its `topicId`. When the article is ready, offer `get_draft` and `update_draft`.
+- `topic_generation_in_progress`: Keytomic writes the article now. Follow it with `list_calendar_topics` and its `topicId`.
+- `draft_not_found`: the topic has no article that is ready. Read the topic with `list_calendar_topics` and its `topicId`. When Keytomic writes the article now, follow it. Otherwise, offer `generate_article`.
 - `article_slug_taken`: another article of the site uses the slug. Ask the user for a different slug.
 - `image_studio_setup_required`, `automation_days_required`, `calendar_run_required`, `brand_profile_review_required`: the site needs a setup step in Keytomic first. Give the user the message, then stop.
 - `brand_profile_incomplete`: the brand profile is not complete. Offer to fill the missing fields with `update_brand_profile` after the user's yes. The owner then confirms the review in Keytomic.

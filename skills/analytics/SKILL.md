@@ -11,7 +11,7 @@ These tools need the `analytics:read` MCP Scope. A Connected App can be without 
 
 ## Steps
 
-1. Find the site with `list_sites`. Never show a projectId or a GA4 property id. `list_integrations` tells whether Google Analytics is connected.
+1. Find the site with `list_sites`. Never show a projectId or a GA4 property id. The `integrations` section of `get_project` tells whether Google Analytics is connected.
 2. Pick the tool for the question:
 
    | The user asks about | Tool |
