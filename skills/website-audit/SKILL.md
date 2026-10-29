@@ -17,9 +17,9 @@ A Website Audit crawls a site's saved domain and reports per category: status, f
 3. While the audit is queued or running, call `watch_audit`. After each result, tell the user what changed in one or two sentences, then call `watch_audit` again with its `since` value. Stop when the status is completed, partial, failed or cancelled.
 4. When the audit is completed or partial, read `get_audit` for the summary, then page through `list_audit_findings` with `cursor` until `nextCursor` is empty. The report is complete only when every finding has a place in it.
 5. Go deeper only on request or for the top issues:
-   - `get_audit_category` for one category's checks.
-   - `list_audit_check_rows` for every row of a check.
-   - `list_audit_evidence` for every row of a finding, when `evidence.truncated` is true.
+   - `get_audit` with `category` for one category's checks.
+   - `list_audit_rows` with `category` and `check` for every row of a check.
+   - `list_audit_rows` with `subject` and `key` for every row of a finding, when `evidence.truncated` is true.
    - `list_audit_pages` for the crawl state of each URL.
    - `list_audit_links` for the links the crawl found, with the HTTP status of each link and whether it works.
 

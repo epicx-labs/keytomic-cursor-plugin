@@ -13,7 +13,7 @@ Keytomic publishes the article of a content calendar topic to a publishing desti
 
 1. Find the site with `list_sites`. Never show a projectId, a topicId or a destinationId. Name a topic by its title and its scheduled day, and a destination by its name and provider.
 2. Find the topic with `list_calendar_topics`. The topic must have an article. When it has none, offer to write it with the content-calendar skill.
-3. Read the destinations with `list_publishing_destinations`:
+3. Read the destinations with `get_project` and `sections` set to `["destinations"]`:
    - No destination: give the user the `connectUrl`, where the owner connects one in Keytomic, then stop.
    - A destination with status `needs_attention`: give the user its `fixUrl`, and do not publish to it.
    - Several destinations: ask the user which one.
@@ -31,13 +31,13 @@ Keytomic publishes the article of a content calendar topic to a publishing desti
 ## Errors
 
 - `retryable` true: wait `retryAfterSeconds`, then call the tool again.
-- `publishing_destination_unavailable`: the destination was removed, needs a reconnect, or belongs to another site. Read `list_publishing_destinations` again, and give the user the `fixUrl`.
+- `publishing_destination_unavailable`: the destination was removed, needs a reconnect, or belongs to another site. Read the `destinations` section of `get_project` again, and give the user the `fixUrl`.
 - `destination_setup_required`: the destination needs a setting first. Give the user the `fixUrl`, then stop.
 - `draft_mode_not_supported`: the destination cannot keep a draft. Offer mode `publish`, which makes the article live and returns a plan first.
 - `publication_in_progress`: a publish of this article to this destination has not ended. Read `get_publication_status` before you try again.
 - `publish_failed`: the destination did not confirm the publish, so the article may or may not be there. Give the user the `fixUrl`, and read `get_publication_status` before you try again.
 - `article_slug_taken`: another article of the site uses the slug. Ask the user for a new slug, change it with `update_draft` after the user's yes, then call `publish_draft` again.
-- `draft_not_found`: Keytomic cannot find the article now. Read the topic again with `get_calendar_topic`.
+- `draft_not_found`: Keytomic cannot find the article now. Read the topic again with `list_calendar_topics` and its `topicId`.
 - `topic_not_in_plan`: the topic is locked for now. Tell the user so.
 - `image_studio_setup_required`: the user must save the site's Image Studio settings in Keytomic first.
 - `usage_limit_reached`: the site used all its daily publishes. Give `limitName`, what was used of `limit`, and `resetsAt` when the error has it. Then stop the publishes.

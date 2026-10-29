@@ -10,29 +10,29 @@ The brand profile is the owner's. Content generation uses it only after the owne
 ## Steps
 
 1. Find the site with `list_sites`. Never show a projectId.
-2. Read the site before any advice or edit:
-   - `get_project`: name and domain, the brand profile (metadata, audience, Brand Voice, Content Guardrails, Offer Positioning, competitors), whether the review is complete, the setup checklist and the Domain Rating.
-   - `get_project_settings`: Article Settings, indexing settings, the automatic blog schedule and the author profiles with the default author.
-   - `get_usage`: the plan, the subscription state, and each Usage Limit with what is used and what is left.
-   - `list_integrations`: Search Console, Google Analytics, Bing Webmaster, each Shopify store and each publishing destination, with the status of each. An integration that is not connected, or needs attention, has a `connectUrl`. Only the owner connects or fixes it, in Keytomic.
+2. Read the site with `get_project` before any advice or edit. Without `sections`, it returns `profile`, `settings` and `integrations`. Add `usage` in `sections` for the plan:
+   - `profile`: name and domain, the brand profile (metadata, audience, Brand Voice, Content Guardrails, Offer Positioning, competitors), whether the review is complete, the setup checklist and the Domain Rating.
+   - `settings`: Article Settings, indexing settings, the automatic blog schedule and the author profiles with the default author.
+   - `usage`: the plan, the subscription state, and each Usage Limit with what is used and what is left.
+   - `integrations`: Search Console, Google Analytics, Bing Webmaster, each Shopify store and each publishing destination, with the status of each. An integration that is not connected, or needs attention, has a `connectUrl`. Only the owner connects or fixes it, in Keytomic.
 3. Report the state. Name what is missing from the setup checklist, whether the review is complete, and the Usage Limits that are near their cap.
 4. For an edit, show the user the exact fields and the new values, then get a yes, then call the tool:
 
    | Edit | Tool | Note |
    | --- | --- | --- |
-   | Brand profile fields | `update_brand_profile` | `brandVoice`, `audienceProfile` and `contentGuardrails` replace the whole section: send every field of the section with the current values from `get_project`. The other fields change one at a time. |
-   | Article length, tone, voice, links, images, YouTube, author override | `update_article_settings` | Only the named fields change. |
-   | URL prefix of the site's posts | `update_indexing_settings` | `null` clears it. |
-   | Add an author | `create_author_profile` | The first author becomes the default. One call makes one author. |
-   | Change an author | `update_author_profile` | Send every field with the current values from `get_project_settings`. |
-   | Default author | `set_default_author_profile` | |
+   | Brand profile fields | `update_brand_profile` | `brandVoice`, `audienceProfile` and `contentGuardrails` replace the whole section: send every field of the section with the current values from the `profile` section. The other fields change one at a time. |
+   | Article length, tone, voice, links, images, YouTube, author override | `update_project_settings` with `articleSettings` | Only the named fields change. |
+   | URL prefix of the site's posts | `update_project_settings` with `indexing.urlPrefix` | `null` clears it. |
+   | Add an author | `save_author_profile` without `authorProfileId` | The first author becomes the default. One call makes one author. |
+   | Change an author | `save_author_profile` with `authorProfileId` | Send every field with the current values from the `settings` section. |
+   | Default author | `save_author_profile` with `authorProfileId` and `makeDefault` set to `true` | |
    | Remove an author | `delete_author_profile` | Ask the user first. The result says which author became the default. |
 
 5. After the edit, read the site again and confirm the new values to the user.
 
 ## Limits
 
-- The brand profile review happens in Keytomic. Give the user the link from `get_project`: `profileUrl`.
+- The brand profile review happens in Keytomic. Give the user the link from the `profile` section: `profileUrl`.
 - The automatic blog schedule is also set in Keytomic, in the site's automatic blog settings. No tool returns a link to it, so do not give `profileUrl` for it.
 - Plan changes and purchases also happen in Keytomic. No tool changes the plan. The billing rule in Errors applies.
 - Competitors, the sitemap inventory, screenshots and the Domain Rating are not editable here.

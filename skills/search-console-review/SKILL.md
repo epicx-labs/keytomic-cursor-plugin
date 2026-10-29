@@ -11,26 +11,26 @@ Keytomic reads the site's connected Google Search Console property. The insight 
 
 1. Find the site with `list_sites`. The result says whether Search Console is connected. When it is not, give the user the connect link from the tool and stop. Never show a projectId.
 2. Start with `get_search_performance` for the period the user names, or the default period. It gives clicks, impressions, CTR and average position, the change against the comparison period, and the top queries and pages.
-3. Pick the insight tool for the question. Each one takes `projectId`, a period, and `dimension` set to `query` or `page`:
+3. Pick the `kind` of `get_search_insight` for the question. Each kind takes `projectId` and its own inputs, such as a period, or `dimension` set to `query` or `page`. The tool description lists the inputs of each kind:
 
-   | The user asks about | Tool |
+   | The user asks about | `kind` |
    | --- | --- |
-   | The best queries or pages | `list_top_rankings` (set `sortBy` to `impressions` for visibility) |
-   | What is new in search | `list_new_rankings` |
-   | What gains | `list_improving` |
-   | What loses, and why | `list_declining` (each page carries a likely cause: position, demand or CTR loss) |
-   | Quick wins just below the top | `list_low_hanging_fruits` |
-   | Pages that get seen but not clicked | `list_underperforming` |
-   | Several pages that compete for one query | `list_cannibalization` |
-   | Sitemap pages with no search traffic | `list_zombie_pages` |
-   | What people ask | `list_question_queries` |
+   | The best queries or pages | `top_rankings` (set `sortBy` to `impressions` for visibility) |
+   | What is new in search | `new_rankings` |
+   | What gains | `improving` |
+   | What loses, and why | `declining` (each page carries a likely cause: position, demand or CTR loss) |
+   | Quick wins just below the top | `low_hanging_fruits` |
+   | Pages that get seen but not clicked | `underperforming` |
+   | Several pages that compete for one query | `cannibalization` |
+   | Sitemap pages with no search traffic | `zombie_pages` |
+   | What people ask | `question_queries` |
 
-4. Use the raw tools when no insight tool answers:
+4. Use the raw tools when no insight kind answers:
    - `search_analytics_query` for any dimensions and filters.
-   - `list_sitemaps`, `get_sitemap` and `list_sitemap_urls` for sitemaps.
-   - `inspect_url` and `inspect_urls` for the index status of URLs. Google allows about 2,000 inspections per property per day.
-   - `get_property` for the property and the permission level.
-5. Sitemap writes, `submit_sitemap` and `sync_sitemaps`, are safe to repeat. Ask the user before the first call.
+   - `list_sitemaps` for the sitemaps of the property (with `sitemapUrl` for one sitemap), and `list_sitemap_urls` for the URLs in a sitemap.
+   - `inspect_urls` for the index status of up to 50 URLs. Google allows about 2,000 inspections per property per day.
+   - `get_project` with `sections` set to `["property"]` for the property and the permission level.
+5. To submit URLs or sitemaps to Google and Bing, use the indexing skill.
 
 ## The report
 

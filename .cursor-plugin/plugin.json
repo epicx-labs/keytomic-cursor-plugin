@@ -1,8 +1,8 @@
 {
   "name": "keytomic",
   "displayName": "AI SEO with Keytomic",
-  "version": "0.2.0",
-  "description": "The end-to-end AI SEO agent in Cursor, for Google and AI search: SEO audits, Search Console and Google Analytics insights, keyword research, content calendar, articles, hero images and CMS publishing. Find top, new, improving and declining rankings, low-hanging fruits, underperforming pages, keyword cannibalization, zombie pages and question queries; inspect URLs and submit sitemaps; read GA4 traffic and events; plan and run your content calendar; write, edit and publish articles to your CMS; manage your brand profile, authors and settings; and check plan usage and integrations. AI SEO automation on your Keytomic workspace.",
+  "version": "0.3.0",
+  "description": "The end-to-end AI SEO agent in Cursor, for Google and AI search: SEO audits, Search Console and Google Analytics insights, keyword research, content calendar, articles, hero images, CMS publishing, indexing, backlinks, Reddit Opportunities and AI Visibility. Find top, new, improving and declining rankings, low-hanging fruits, underperforming pages, keyword cannibalization, zombie pages and question queries; inspect URLs and submit URLs and sitemaps to Google and Bing; read GA4 traffic and events; plan and run your content calendar; write, edit and publish articles to your CMS; read your backlinks and backlink gaps; find Reddit threads to answer and draft replies; track how AI platforms mention your brand; manage your brand profile, authors and settings; and check plan usage and integrations. AI SEO automation on your Keytomic workspace.",
   "author": {
     "name": "Keytomic",
     "email": "hi@keytomic.com"
@@ -26,6 +26,10 @@
     "keyword-research",
     "content-calendar",
     "ai-content-writing",
+    "indexing",
+    "backlinks",
+    "reddit-marketing",
+    "ai-visibility",
     "keytomic",
     "mcp"
   ],
