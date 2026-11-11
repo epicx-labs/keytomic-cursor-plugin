@@ -29,6 +29,7 @@ These tools need the content MCP Scopes. The tools that change data need both `c
    | The article of a topic, written now | `generate_article` |
    | The text of an article | `get_draft` |
    | A change to an article: title, slug, SEO title and description, text | `update_draft` |
+   | The structured data (JSON-LD) of an article | `get_draft` (`structuredData`), and `update_draft` with `structuredDataEdit` |
    | A new hero image for an article | `generate_hero_image`, with `creativeDirection` and `exclusions` from the user's words |
 
 3. Before each paid tool, tell the user what the call uses and what is left, then get a yes:
@@ -43,6 +44,7 @@ These tools need the content MCP Scopes. The tools that change data need both `c
    - When `generate_hero_image` returns `generated_not_attached`, the credit is used and the image is in the Image Studio Media Library. Tell the user to attach it in Content Studio.
 7. For `update_calendar_topic` and `update_draft`, show the user the exact fields and the new values, then get a yes. Send only the fields that change.
    - `get_draft` gives `canEdit`. When it is false, this connection cannot save edits: the Connected App does not have `content:write`, or the user's role does not give the permission. Tell the user so before an edit.
+   - Only WordPress gets structured data from Keytomic. A `structuredDataEdit` save can also send the structured data to the live WordPress post: `liveUpdate` from `get_draft` tells when. That send needs the `content:publish` scope and the user's publish permission; without them, the edit saves and goes out with the next publish. When `seoPluginCanOverride` is true, an SEO plugin on the site can show its own schema, so never tell the user that the live page shows Keytomic's structured data.
    - Read the article with `get_draft` just before `update_draft`. `contentMarkdown` replaces the whole text, and the last save wins. Keep each `[[youtube:ID]]` token and each image URL that stays in the article.
    - Tell the user that an edit to a published article does not change the live page until the article is published again.
 8. When the workspace can open only some topics for now, the content tools return only those and a `lockedTopicCount`. Say how many topics are locked for now. The billing rule in Errors applies.
