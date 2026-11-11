@@ -21,7 +21,8 @@ Keytomic publishes the article of a content calendar topic to a publishing desti
 5. Before the first call to `publish_draft`, tell the user the article, the destination and the mode, then get a yes. A first draft to a GoHighLevel destination runs on this call.
 6. Call `publish_draft` without `confirm`. When the result has status `plan`, nothing was sent. Show the plan to the user: the destination, the mode, the expected URL, whether it adds a new post or updates an earlier one, and whether it uses a daily publish, with the publishes left today. Call again with `confirm` set to `true` only after the user agrees.
 7. When a call that publishes times out or answers `internal_error`, read `get_publication_status` before you call `publish_draft` again. The publish can still finish, and a second call can use a second daily publish or add a second post.
-8. When the user asks whether or where an article was published, read `get_publication_status`. It gives the latest publication for each mode of each destination that has one.
+8. An imported post is an article that Keytomic imported from the site. When the plan says that the post changed on the site after the import, ask the user first: a publish replaces those changes.
+9. When the user asks whether or where an article was published, read `get_publication_status`. It gives the latest publication for each mode of each destination that has one.
 
 ## The report
 
@@ -37,6 +38,11 @@ Keytomic publishes the article of a content calendar topic to a publishing desti
 - `publication_in_progress`: a publish of this article to this destination has not ended. Read `get_publication_status` before you try again.
 - `publish_failed`: the destination did not confirm the publish, so the article may or may not be there. Give the user the `fixUrl`, and read `get_publication_status` before you try again.
 - `article_slug_taken`: another article of the site uses the slug. Ask the user for a new slug, change it with `update_draft` after the user's yes, then call `publish_draft` again.
+- `draft_not_publishable`: the article has no title, slug, text or valid image URL yet. Offer to edit it with `update_draft`.
+- `draft_replaced_by_refresh`: the site shows a refreshed version of the article. Give the user the message, then stop.
+- `imported_post_publish_only`: a draft would take the live imported post offline. Offer mode `publish`, which returns a plan first.
+- `imported_post_empty_body`: the imported post has no body. Tell the user to add the body first.
+- `content_refresh_api_key_expired`: the site's Keytomic API key has expired. Give the user the message and the `fixUrl`, then stop.
 - `draft_not_found`: Keytomic cannot find the article now. Read the topic again with `list_calendar_topics` and its `topicId`.
 - `topic_not_in_plan`: the topic is locked for now. Tell the user so.
 - `image_studio_setup_required`: the user must save the site's Image Studio settings in Keytomic first.
